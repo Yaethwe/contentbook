@@ -1,0 +1,52 @@
+:root{
+    --narmalBtbWidth:15%;
+}
+
+.circle-btn{
+    border:0px;
+    background-color: #e0b700;
+    color: white;
+    border-radius: 20px;
+    margin: 2px;
+    padding: 6px;
+    width:var(--narmalBtbWidth);
+    transition: width 200ms ease;
+}
+
+.circle-btn:hover{
+    cursor: pointer;
+    background-color: white;
+    color:#e0b700;
+    margin: 2px;
+    padding: 4px;
+    border:2px solid #e0b700;
+}
+
+.del-btn{
+    border:0px;
+    background-color: red;
+    color: white;
+    border-radius: 20px;
+    margin: 2px;
+    padding: 6px;
+    width:var(--narmalBtbWidth);
+    transition: width 200ms ease;
+}
+
+.del-btn:hover{
+    cursor: pointer;
+    background-color: white;
+    color:red;
+    margin: 2px;
+    padding: 4px;
+    border:2px solid red;
+}
+
+@media screen and (max-width:600px){
+    .circle-btn{
+        width:50%;
+    }
+    .del-btn{
+        width:50%;
+    }
+}
