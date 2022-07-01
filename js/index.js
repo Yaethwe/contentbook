@@ -33,6 +33,16 @@ function addContent(name,phone,email,address,country){
     loadLocalContents()
 }
 
+function editContent(i,name,phone,email,address,country){
+    obj[i].name=name
+    obj[i].phone=phone
+    obj[i].email=email
+    obj[i].address=address
+    obj[i].country=country
+    saveToLocalStorage()
+    loadLocalContents()
+}
+
 function loadFromLocalStorage(){
     obj = JSON.parse(atob(localStorage.getItem('localContents')))
 }
@@ -48,7 +58,9 @@ function loadLocalContents(){
         if(obj[i]){
             let div = document.createElement('div')
             let div2 = document.createElement('div')
+            let div3 = document.createElement('div')
             let deleteBtn = document.createElement('button')
+            let editBtn = document.createElement('button')
             let dDiv = document.createElement('div');
             let name = document.createElement('label')
             let phone = document.createElement('label')
@@ -71,12 +83,21 @@ function loadLocalContents(){
             div2.style=`
                 justify-content:space-between;
             `;
+            div3.className="flex"
+            div3.style=`
+                width:70%;
+            `;
             dDiv.style.display="none"
             deleteBtn.className="common-btn SS pad-5"
+            editBtn.className="common-btn SS pad-5"
             deleteBtn.style=`
                 width:20%;
             `;
+            editBtn.style=`
+                width:20%
+            `;
             deleteBtn.textContent="delete"
+            editBtn.innerHTML=`<ion-icon name="card-outline"></ion-icon>edit`
 
             name.className="fs-20 SS fg-black"
             name.style=`
@@ -94,7 +115,9 @@ function loadLocalContents(){
             country.textContent = obj[i].country
 
             div2.appendChild(name)
-            div2.appendChild(deleteBtn)
+            div2.appendChild(div3)
+            div3.appendChild(deleteBtn)
+            div3.appendChild(editBtn)
             div.appendChild(div2)
             div.appendChild(phone)
             dDiv.appendChild(email)
@@ -113,6 +136,9 @@ function loadLocalContents(){
                 obj.splice(i,1)
                 if(confirm("Are you sure that you want to delete this content?")){saveToLocalStorage();loadLocalContents()}
             }
+            editBtn.onclick=()=>{
+                addForm("edit", i)
+            }
         }
     }
 }
@@ -123,7 +149,7 @@ function clearContents(){
     }
 }
 
-function addForm(){
+function addForm(option, index){
     let cover = document.createElement('div')
     let mid = document.createElement('div')
     let foot = document.createElement('foot')
@@ -143,7 +169,22 @@ function addForm(){
     mid.className="popup"
     mid.style.display="block"
     header.className="pad-5 SS fs-40"
-    header.textContent="Add Content Form"
+
+    if(option=="add"){
+        header.textContent="Add Content Form"
+        addBtn.textContent="add"
+        closeBtn.textContent="close"
+    }else if(option=="edit"){
+        header.textContent=`Edit Content " ${obj[index].name} "`
+        addBtn.textContent="save"
+        closeBtn.textContent="discard"
+        nameI.value = obj[index].name
+        phoneI.value = obj[index].phone
+        emailI.value = obj[index].email
+        addressI.value = obj[index].address
+        countryI.value = obj[index].country
+    }
+    
     foot.className="pad-5 flex"
     closeBtn.className="common-btn fs-20"
     addBtn.className="common-btn fs-20"
@@ -164,8 +205,6 @@ function addForm(){
     addressI.placeholder="home address"
     countryI.type="select"
 
-    closeBtn.textContent="close"
-    addBtn.textContent="add"
     closeBtn.style.backgroundColor="red"
     closeBtn.onmouseleave=()=>{closeBtn.style.backgroundColor="red"}
     closeBtn.onmouseenter=()=>{closeBtn.style.backgroundColor="pink"}
@@ -191,7 +230,23 @@ function addForm(){
     addBtn.onclick=()=>{
         if(nameI.value){
             if(phoneI.value){
-                addContent(nameI.value,phoneI.value,emailI.value,addressI.value,countryI.value);closeBtn.onclick()
+                if(emailI.value){
+                    if(addressI.value){
+                        if(countryI.value){
+                            if(option=="add"){
+                                addContent(nameI.value,phoneI.value,emailI.value,addressI.value,countryI.value);closeBtn.onclick()
+                            }else if(option=="edit"){
+                                editContent(index,nameI.value,phoneI.value,emailI.value,addressI.value,countryI.value);closeBtn.onclick()
+                            } 
+                        }else{
+                            alert('You need to fill the country.')
+                        }
+                    }else{
+                        alert('You need to fill the address.')
+                    }
+                }else{
+                    alert('You need to fill the email address.')
+                }
             }else{
                 alert('You need to fill the phone number.')
             }
@@ -200,9 +255,9 @@ function addForm(){
         }
     }
 }
-
+//addContent(nameI.value,phoneI.value,emailI.value,addressI.value,countryI.value);closeBtn.onclick()
 addContentBtn.onclick = () => {
-    addForm()
+    addForm("add")
 }
 
 DACButton.onclick=()=>{
